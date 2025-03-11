@@ -6,8 +6,6 @@ import asyncio
 from dotenv import load_dotenv
 import os
 
-# stop with kill -9 $(pgrep -f sunrise-alarm.py)
-
 async def connect(): 
     # Load environment variables from .env file
     load_dotenv()
@@ -21,10 +19,12 @@ async def connect():
     return await client.l530(ip_address)
 
 async def init():
+    duration = os.getenv("SUNRISE_DURATION")
+
     color = Color.WarmWhite
     start_brightness = 0
     end_brightness = 30
-    time_elapsed = 60*20 # 20 minutes
+    time_elapsed = 60*duration # 20 minutes
     wait_time = time_elapsed/(end_brightness-start_brightness)
     
     device = await connect() 

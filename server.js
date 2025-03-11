@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
+const { spawn } = require('child_process');
 
 const app = express();
 const PORT = 3000;
@@ -50,6 +51,13 @@ app.post("/toggle-alarm", (req, res) => {
 app.get("/alarm-status", (req, res) => {
     res.json(alarmData);
 });
+
+// Stop ringing alarm
+app.post("/stop-alarm", (req, res) => {
+    spawn('./scripts/stop-alarm.sh');
+    res.json({ message: "Alarm stopped" });
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
