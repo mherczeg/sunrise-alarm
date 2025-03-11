@@ -5,6 +5,7 @@ very low effort project, most of this is AI generated.
 
 1. install dependencies 
     - `pip install tapo dotenv asyncio`
+    - `npm i`
     - jq
     - amixer
     - play
