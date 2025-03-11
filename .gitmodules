@@ -1,0 +1,3 @@
+[submodule "tapo"]
+	path = tapo
+	url = git@github.com:mihai-dinculescu/tapo.git
