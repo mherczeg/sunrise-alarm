@@ -14,7 +14,7 @@ ALARM_ENABLED=$(jq -r '.alarmEnabled' "$ALARM_FILE")
 # Get the current time in HH:MM format
 CURRENT_TIME=$(date +"%H:%M")
 
-Check if the alarm is enabled and the current time matches alarmTime
+# Check if the alarm is enabled and the current time matches alarmTime
 if [[ "$ALARM_ENABLED" == "true" && "$CURRENT_TIME" == "$ALARM_TIME" ]]; then
     echo "Alarm time reached! Running the commands..."
     python3 $SCRIPT_DIR/../sunrise-alarm.py&
