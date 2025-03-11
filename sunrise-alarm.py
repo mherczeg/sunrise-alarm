@@ -7,9 +7,6 @@ from dotenv import load_dotenv
 import os
 
 async def connect(): 
-    # Load environment variables from .env file
-    load_dotenv()
-
     # Read the username and password
     username = os.getenv("SUNRISE_USERNAME")
     password = os.getenv("SUNRISE_PASSWORD")
@@ -19,13 +16,13 @@ async def connect():
     return await client.l530(ip_address)
 
 async def init():
-    duration = os.getenv("SUNRISE_DURATION")
-
+    load_dotenv()
+    duration = int(os.getenv("SUNRISE_DURATION"))
     color = Color.WarmWhite
     start_brightness = 0
     end_brightness = 30
-    time_elapsed = 60*duration # 20 minutes
-    wait_time = time_elapsed/(end_brightness-start_brightness)
+    full_duration = 60 * duration
+    wait_time = full_duration/(end_brightness-start_brightness)
     
     device = await connect() 
     await device.on()
