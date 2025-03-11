@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm Clock</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        /* Container */
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Input field */
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 1.2em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Buttons */
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .set-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .enable-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .disable-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .status {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+            }
+            input, button {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>⏰ Set Your Alarm</h2>
+        
+        <input type="time" id="alarmTime">
+        <button id="setButton" class="set-btn" onclick="setAlarm()" disabled>Set Alarm</button>
+
+        <h3 class="status">Status: <span id="status">Loading...</span></h3>
+        
+        <button id="enableButton" class="enable-btn hidden" onclick="toggleAlarm(true)">Enable Alarm</button>
+        <button id="disableButton" class="disable-btn hidden" onclick="toggleAlarm(false)">Disable Alarm</button>
+
+    </div>
+
+    <script>
+        async function setAlarm() {
+            const time = document.getElementById("alarmTime").value;
+            if (!time) {
+                alert("Please select a time!");
+                return;
+            }
+
+            const response = await fetch("/set-alarm", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ time })
+            });
+
+            const result = await response.json();
+            document.getElementById("status").innerText = result.message;
+        }
+
+        async function toggleAlarm(enabled) {
+            const response = await fetch("/toggle-alarm", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ enabled })
+            });
+
+            const result = await response.json();
+            document.getElementById("status").innerText = result.message;
+
+            // Refresh UI to reflect the new state
+            loadStatus();
+        }
+
+        async function loadStatus() {
+            const response = await fetch("/alarm-status");
+            const result = await response.json();
+
+            if (result.alarmTime) {
+                document.getElementById("alarmTime").value = result.alarmTime;
+            }
+
+            document.getElementById("status").innerText = 
+                `Alarm: ${result.alarmTime || "Not Set"}, Enabled: ${result.alarmEnabled ? "Yes" : "No"}`;
+
+            // Enable the "Set Alarm" button after loading status
+            document.getElementById("setButton").disabled = false;
+
+            // Show/hide enable/disable buttons based on alarm status
+            if (result.alarmEnabled) {
+                document.getElementById("enableButton").classList.add("hidden");
+                document.getElementById("disableButton").classList.remove("hidden");
+            } else {
+                document.getElementById("enableButton").classList.remove("hidden");
+                document.getElementById("disableButton").classList.add("hidden");
+            }
+        }
+
+        // Load alarm status on page load
+        window.onload = loadStatus;
+    </script>
+
+</body>
+</html>
