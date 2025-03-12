@@ -11,26 +11,23 @@ amixer -q set "$VOLUME_CONTROL" 0%
 # Duration to gradually increase volume (20 minutes)
 DURATION=$((SUNRISE_DURATION * 60))  # Convert minutes to seconds
 
-# Target volume (50%)
-TARGET_VOLUME=50
-
-# Initial volume (0%)
-INITIAL_VOLUME=10
+TARGET_VOLUME=$SOUND_END_VOLUME
+INITIAL_VOLUME=$SOUND_START_VOLUME
 
 # Number of steps for gradual increase
-STEPS=TARGET_VOLUME
+STEPS=TARGET_VOLUME-INITIAL_VOLUME
 
 # Calculate time interval for each step (in seconds)
 STEP_INTERVAL=$((DURATION / STEPS))
 
 # Gradually increase the volume from 0% to 50%
-for ((i=0; i<=STEPS; i++)); do
-    # Calculate the current volume step
-    CURRENT_VOLUME=$((INITIAL_VOLUME + (TARGET_VOLUME * i / STEPS)))
-
+for ((i=INITIAL_VOLUME; i<=TARGET_VOLUME; i++)); do
     # Set the volume using amixer
-    amixer set -q "$VOLUME_CONTROL" "${CURRENT_VOLUME}%"
+    amixer set -q "$VOLUME_CONTROL" "${i}%"
 
     # Wait for the next step interval
     sleep $STEP_INTERVAL
 done
+
+# Set the to final volume
+amixer set -q "$VOLUME_CONTROL" "$SOUND_WAKEUP_VOLUME%"
