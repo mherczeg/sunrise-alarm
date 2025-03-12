@@ -58,6 +58,12 @@ app.post("/stop-alarm", (req, res) => {
     res.json({ message: "Alarm stopped" });
 });
 
+// Start ringing alarm
+app.post("/start-alarm", (req, res) => {
+    spawn('./scripts/start-alarm.sh');
+    res.json({ message: "Alarm startped" });
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

@@ -68,6 +68,11 @@
             color: white;
         }
 
+        .start-btn {
+            background-color: #8400ff;
+            color: white;
+        }
+
         .status {
             margin-top: 15px;
             font-size: 1.1em;
@@ -103,6 +108,8 @@
         <button id="disableButton" class="disable-btn hidden" onclick="toggleAlarm(false)">Disable Alarm</button>
 
         <button id="stopButton" class="stop-btn" onclick="stopAlarm()">Stop Alarm</button>
+
+        <button id="startButton" class="start-btn" onclick="startAlarm()">Start Alarm</button>
 
     </div>
 
@@ -142,29 +149,33 @@
             await fetch("/stop-alarm", { method: "POST" });
         }
 
-async function loadStatus() {
-    const response = await fetch("/alarm-status");
-    const result = await response.json();
+        async function startAlarm() {
+            await fetch("/start-alarm", { method: "POST" });
+        }
 
-    if (result.alarmTime) {
-        document.getElementById("alarmTime").value = result.alarmTime;
-    }
+        async function loadStatus() {
+            const response = await fetch("/alarm-status");
+            const result = await response.json();
 
-    document.getElementById("status").innerText = 
-        `Alarm: ${result.alarmTime || "Not Set"}, Enabled: ${result.alarmEnabled ? "Yes" : "No"}`;
+            if (result.alarmTime) {
+                document.getElementById("alarmTime").value = result.alarmTime;
+            }
 
-    // Enable the "Set Alarm" button after loading status
-    document.getElementById("setButton").disabled = false;
+            document.getElementById("status").innerText = 
+                `Alarm: ${result.alarmTime || "Not Set"}, Enabled: ${result.alarmEnabled ? "Yes" : "No"}`;
 
-    // Show/hide enable/disable buttons based on alarm status
-    if (result.alarmEnabled) {
-        document.getElementById("enableButton").classList.add("hidden");
-        document.getElementById("disableButton").classList.remove("hidden");
-    } else {
-        document.getElementById("enableButton").classList.remove("hidden");
-        document.getElementById("disableButton").classList.add("hidden");
-    }
-}
+            // Enable the "Set Alarm" button after loading status
+            document.getElementById("setButton").disabled = false;
+
+            // Show/hide enable/disable buttons based on alarm status
+            if (result.alarmEnabled) {
+                document.getElementById("enableButton").classList.add("hidden");
+                document.getElementById("disableButton").classList.remove("hidden");
+            } else {
+                document.getElementById("enableButton").classList.remove("hidden");
+                document.getElementById("disableButton").classList.add("hidden");
+            }
+        }
 
         // Load alarm status on page load
         window.onload = loadStatus;
