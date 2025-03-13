@@ -13,7 +13,7 @@ ALARM_TIME=$(jq -r '.alarmTime' "$ALARM_FILE")
 ALARM_ENABLED=$(jq -r '.alarmEnabled' "$ALARM_FILE")
 
 # Get the current time in HH:MM format
-END_TIME=$(date -d "+$SUNRISE_DURATION minutes" +"%H:%M:%S")
+END_TIME=$(date -d "+$SUNRISE_DURATION minutes" +"%H:%M")
 
 # Check if the alarm is enabled and the alarm end time matches alarmTime
 if [[ "$ALARM_ENABLED" == "true" && "$ALARM_TIME" == "$END_TIME" ]]; then
