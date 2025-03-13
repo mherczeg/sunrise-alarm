@@ -11,4 +11,4 @@ very low effort project, most of this is AI generated.
     - play
 2. create .env and alarm.json file.
 3. run server for controls
-4. add cron job `* * * * * /project/root/scripts/start_alarm.sh`
+4. add cron job `* * * * * /project/root/scripts/check-alarm.sh`
