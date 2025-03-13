@@ -15,10 +15,10 @@ ALARM_ENABLED=$(jq -r '.alarmEnabled' "$ALARM_FILE")
 # Get the current time in HH:MM format
 END_TIME=$(date -d "+$SUNRISE_DURATION minutes" +"%H:%M")
 
-# Check if the alarm is enabled and the alarm end time matches alarmTime
+Check if the alarm is enabled and the alarm end time matches alarmTime
 if [[ "$ALARM_ENABLED" == "true" && "$ALARM_TIME" == "$END_TIME" ]]; then
     echo "Alarm time reached! Running the commands..."
-    ./$SCRIPT_DIR/start-alarm.sh &
+    source "$SCRIPT_DIR/start-alarm.sh"
 else
     echo "No alarm triggered. The alarm end time would be $END_TIME. Alarm time is $ALARM_TIME. The alarm status is $ALARM_ENABLED"
 fi
